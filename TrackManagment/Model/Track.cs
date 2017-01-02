@@ -5,9 +5,9 @@ using System.Text;
 
 namespace TrackManagment.Model
 {
-    class Track
+    public class Track
     {
-        public List<Talk> Talks { get; set; }
+        // public List<Talk> Talks { get; set; }
 
         public MorningSession MorningSession { get; set; }
     }

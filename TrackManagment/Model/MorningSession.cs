@@ -5,13 +5,22 @@ using System.Text;
 
 namespace TrackManagment.Model
 {
-    class MorningSession
+    public class MorningSession
     {
+        const int minuts = 60;
         public TimeSpan StartTime { get; set; }
 
         public TimeSpan EndTime { get; set; }
 
         public List<Event> MorningEvents { get; set; }
+
+        private int _maxDurationAvailableMints
+        {
+            get
+            {
+                return (EndTime.Hours - StartTime.Hours) * minuts;
+            }
+        }
 
 
         public MorningSession()
@@ -22,16 +31,25 @@ namespace TrackManagment.Model
         }
 
 
-        public List<Event> AllocateSession(List<Talk> talks)
+        public List<Event> Shedule(List<Talk> talks)
         {
             foreach (Talk talk in talks)
             {
+                if (IsTimeReamining(talk.Duration))
+                {
+                    MorningEvents.Add(new Event
+                    {
+                        Name = talk.Name,
+                        StartTime = StartTime,
+                        Duration = talk.Duration
+                    });
 
-                MorningEvents.Add(new Event { Name = talk.Name, StartTime = StartTime, Duration = talk.Duration });
+                    //talks.Remove(talk);
+                }
 
             }
 
-            return null;
+            return MorningEvents;
 
         }
 
@@ -46,15 +64,23 @@ namespace TrackManagment.Model
         {
             TimeSpan newTime = new TimeSpan(0, duration, 0);
 
-            if (StartTime.Add(newTime).CompareTo(EndTime) < 0)
+            if (StartTime.Add(newTime) < EndTime)
             {
                 return true;
             }
             else
                 return false;
+
+        }
+
+        private int GetRemainingTime()
+        {
+            const int mints = 60;
+
+            return (EndTime.Hours - StartTime.Hours) * mints;
         }
     }
 
 
-   
+
 }

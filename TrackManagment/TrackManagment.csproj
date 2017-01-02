@@ -44,7 +44,10 @@
     <Compile Include="Model\Conference.cs" />
     <Compile Include="Model\EveningSession.cs" />
     <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\FileReader.cs" />
+    <Compile Include="Model\IFileReader.cs" />
     <Compile Include="Model\MorningSession.cs" />
+    <Compile Include="Model\StringToModel.cs" />
     <Compile Include="Model\Talk.cs" />
     <Compile Include="Model\Track.cs" />
     <Compile Include="Program.cs" />

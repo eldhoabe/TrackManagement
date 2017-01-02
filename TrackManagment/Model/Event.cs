@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace TrackManagment.Model
 {
-    class Event : Talk
+    public class Event : Talk
     {
         public TimeSpan StartTime { get; set; }
-
     }
 }
