@@ -8,11 +8,14 @@ namespace TrackManagment.Model
 {
     class StringToModel
     {
-        private List<Talk> Talks { get; set; }
+        List<Talk> Talks { get; set; }
 
+        readonly IParser parser;
         public StringToModel()
         {
             Talks = new List<Talk>();
+
+            parser = new TrackManagment.Model.Parser.Parser();
         }
 
         public List<Talk> ConvertToTalks(IEnumerable<string> lines)
@@ -34,31 +37,14 @@ namespace TrackManagment.Model
         /// Parse time to integer
         /// </summary>
         /// <param name="theWord"></param>
-        /// <exception cref="FormatException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         /// <returns></returns>
         internal int ParseTime(string theWord)
         {
             if (string.IsNullOrEmpty(theWord))
                 throw new ArgumentNullException("theWord");
 
-            const string minSuffix = "min";
-            const string lightiningSuffix = "lightning";
-
-            if (theWord.EndsWith(minSuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                var time =
-                    Convert.ToInt32(theWord.Substring(0, theWord.IndexOf(minSuffix, StringComparison.OrdinalIgnoreCase)));
-
-                return time;
-            }
-            if (theWord.EndsWith(lightiningSuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                return 5;
-            }
-
-
-            throw new FormatException("The string format is not met, either " + minSuffix + " or " + lightiningSuffix +
-                                      " is supported");
+            return parser.ParseTime(theWord);
         }
     }
 }
