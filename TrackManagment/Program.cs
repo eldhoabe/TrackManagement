@@ -9,20 +9,30 @@ namespace TrackManagment
 {
     class Program
     {
-        const string filePath = @"C:\a.txt";
+        const string filePath = "Input.txt";
 
 
         static void Main(string[] args)
         {
+
             IFileReader reader = new FileReader(filePath);
             IEnumerable<string> fileResult = reader.ReadLines();
 
 
             List<Talk> talks = new StringToModel().ConvertToTalks(fileResult);
 
-            var ms = new MorningSession().Shedule(talks);
+            List<Event> morningEvents = new MorningSession()
+                                            .Shedule(talks);
 
-            int m = 0;
+
+            Console.WriteLine("***Morning Events***");
+            foreach (var evnt in morningEvents)
+            {
+               
+                Console.WriteLine(evnt.Name);
+            }
+
+            Console.ReadLine();
         }
     }
 }
