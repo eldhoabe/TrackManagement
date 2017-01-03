@@ -14,13 +14,7 @@ namespace TrackManagment.Model
 
         public List<Event> MorningEvents { get; set; }
 
-        private int _maxDurationAvailableMints
-        {
-            get
-            {
-                return (EndTime.Hours - StartTime.Hours) * minuts;
-            }
-        }
+        private int _maxDurationAvailableMints {get;set;}
 
 
         public MorningSession()
@@ -28,6 +22,8 @@ namespace TrackManagment.Model
             StartTime = new TimeSpan(9, 0, 0);
             EndTime = new TimeSpan(12, 0, 0);
             MorningEvents = new List<Event>();
+
+            _maxDurationAvailableMints = (EndTime.Hours - StartTime.Hours) * minuts;
         }
 
 
@@ -44,7 +40,7 @@ namespace TrackManagment.Model
                         Duration = talk.Duration
                     });
 
-                    //talks.Remove(talk);
+                    UpdateRemainingTime(talk.Duration);
                 }
 
             }
@@ -62,23 +58,15 @@ namespace TrackManagment.Model
         /// <returns></returns>
         private bool IsTimeReamining(int duration)
         {
-            TimeSpan newTime = new TimeSpan(0, duration, 0);
-
-            if (StartTime.Add(newTime) < EndTime)
-            {
-                return true;
-            }
-            else
-                return false;
+            return _maxDurationAvailableMints > duration;
 
         }
 
-        private int GetRemainingTime()
+        private void UpdateRemainingTime(int duration)
         {
-            const int mints = 60;
-
-            return (EndTime.Hours - StartTime.Hours) * mints;
+            _maxDurationAvailableMints = _maxDurationAvailableMints - duration;
         }
+
     }
 
 

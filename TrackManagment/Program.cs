@@ -9,7 +9,9 @@ namespace TrackManagment
 {
     class Program
     {
-        const string filePath = @"E:\thoughts.txt";
+        const string filePath = @"C:\a.txt";
+
+
         static void Main(string[] args)
         {
             IFileReader reader = new FileReader(filePath);
