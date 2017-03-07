@@ -21,15 +21,32 @@ namespace TrackManagment
 
             List<Talk> talks = new StringToModel().ConvertToTalks(fileResult);
 
-            List<Event> morningEvents = new MorningSession()
-                                            .Shedule(talks);
+            var morning = new MorningSession();
+            List<Event> morningEvents = morning.Shedule(talks);
+            var remanining = morning.UnsheduledEvents(talks);
+
 
 
             Console.WriteLine("***Morning Events***");
             foreach (var evnt in morningEvents)
             {
-               
-                Console.WriteLine(evnt.Name);
+
+                Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
+                Console.WriteLine();
+            }
+
+
+
+            var evening = new EveningSession();
+            var eveningevents = evening.Shedule(remanining);
+
+
+            Console.WriteLine("***Morning Events***");
+            foreach (var evnt in eveningevents)
+            {
+
+                Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
+                Console.WriteLine();
             }
 
             Console.ReadLine();

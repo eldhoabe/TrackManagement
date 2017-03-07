@@ -9,5 +9,7 @@ namespace TrackManagment.Model
     public class Event : Talk
     {
         public TimeSpan StartTime { get; set; }
+
+        public TimeSpan EndTime { get; set; }
     }
 }

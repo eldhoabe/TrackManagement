@@ -14,7 +14,7 @@ namespace TrackManagment.Model
 
         public List<Event> MorningEvents { get; set; }
 
-        private int _maxDurationAvailableMints {get;set;}
+        private int _maxDurationAvailableMints { get; set; }
 
 
         public MorningSession()
@@ -36,17 +36,32 @@ namespace TrackManagment.Model
                     MorningEvents.Add(new Event
                     {
                         Name = talk.Name,
-                        StartTime = StartTime,
+                        StartTime = talks.IndexOf(talk) == 0 ? StartTime : MorningEvents.Last().EndTime,
+                        EndTime = MorningEvents.Any() ? GetEndTime(MorningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
                         Duration = talk.Duration
                     });
 
                     UpdateRemainingTime(talk.Duration);
                 }
-
             }
 
-            return MorningEvents;
+            UnsheduledEvents(talks);
 
+            MorningEvents.Add(new Event { Name = "Lunch", StartTime = EndTime, Duration = 60, EndTime = GetEndTime(MorningEvents.Last().EndTime, 60) });
+
+            return MorningEvents;
+        }
+
+        public List<Talk> UnsheduledEvents(List<Talk> talks)
+        {
+            var fullist = talks;
+
+            var sheduled = talks.Where(tk => MorningEvents.Any(sh => sh.Name == tk.Name)).ToList();
+
+
+            var unshed = fullist.Except(sheduled).ToList();
+
+            return unshed;
         }
 
 
@@ -58,13 +73,21 @@ namespace TrackManagment.Model
         /// <returns></returns>
         private bool IsTimeReamining(int duration)
         {
-            return _maxDurationAvailableMints > duration;
+            return _maxDurationAvailableMints >= duration;
 
         }
 
         private void UpdateRemainingTime(int duration)
         {
             _maxDurationAvailableMints = _maxDurationAvailableMints - duration;
+        }
+
+
+        private TimeSpan GetEndTime(TimeSpan startTime, int duration)
+        {
+            var s = startTime.Add(new TimeSpan(0, duration, 0));
+
+            return s;
         }
 
     }
