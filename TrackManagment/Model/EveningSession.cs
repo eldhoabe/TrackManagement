@@ -21,11 +21,11 @@ namespace TrackManagment.Model
 
         public EveningSession()
         {
-            StartTime = new TimeSpan(12, 0, 0);
+            StartTime = new TimeSpan(1, 0, 0);
             EndTime = new TimeSpan(5, 0, 0);
             EveningEvents = new List<Event>();
             //1-2 = 60 + 60 + 60 +60 
-            _maxDurationAvailableMints = 280;//(EndTime.Hours - StartTime.Hours) * minuts;
+            _maxDurationAvailableMints = 300;//(EndTime.Hours - StartTime.Hours) * minuts;
         }
 
 
@@ -36,21 +36,28 @@ namespace TrackManagment.Model
             {
                 if (IsTimeReamining(talk.Duration))
                 {
-                    EveningEvents.Add(new Event
+                    if (IsTimeForNetworkingEvent(talk.Duration))
                     {
-                        Name = talk.Name,
-                        StartTime = talks.IndexOf(talk) == 0 ? StartTime : EveningEvents.Last().EndTime,
-                        EndTime = EveningEvents.Any() ? GetEndTime(EveningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
-                        Duration = talk.Duration
-                    });
+                        EveningEvents.Add(new Event
+                        {
+                            Name = "Networking Event",
+                            StartTime = talks.IndexOf(talk) == 0 ? StartTime : EveningEvents.Last().EndTime,
+                            EndTime = EveningEvents.Any() ? GetEndTime(EveningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
+                            Duration = talk.Duration
+                        });
+                    }
+                    else
+                        EveningEvents.Add(new Event
+                        {
+                            Name = talk.Name,
+                            StartTime = talks.IndexOf(talk) == 0 ? StartTime : EveningEvents.Last().EndTime,
+                            EndTime = EveningEvents.Any() ? GetEndTime(EveningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
+                            Duration = talk.Duration
+                        });
 
                     UpdateRemainingTime(talk.Duration);
                 }
             }
-
-            //UnsheduledEvents(talks);
-
-            EveningEvents.Add(new Event { Name = "Lunch", StartTime = EndTime, Duration = 60 });
 
             return EveningEvents;
         }
@@ -62,7 +69,7 @@ namespace TrackManagment.Model
         /// <returns></returns>
         private bool IsTimeReamining(int duration)
         {
-            return _maxDurationAvailableMints >= duration;
+            return _maxDurationAvailableMints > duration;
 
         }
 
@@ -77,6 +84,17 @@ namespace TrackManagment.Model
             var s = startTime.Add(new TimeSpan(0, duration, 0));
 
             return s;
+        }
+
+        private bool IsTimeForNetworkingEvent(int duration)
+        {
+            if (!EveningEvents.Any()) return false;
+
+            if (EveningEvents.Last().EndTime.Add(new TimeSpan(0, duration, 0)) > new TimeSpan(5, 0, 0))
+            {
+                return true;
+            }
+            return false;
         }
 
     }

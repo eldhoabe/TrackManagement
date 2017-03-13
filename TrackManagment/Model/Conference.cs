@@ -10,7 +10,5 @@ namespace TrackManagment.Model
     {
         public List<Track> Tracks { get; set; }
 
-
-
     }
 }
