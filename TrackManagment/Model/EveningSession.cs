@@ -18,6 +18,8 @@ namespace TrackManagment.Model
 
         private int _maxDurationAvailableMints { get; set; }
 
+        bool _isnetworkingEventAdded { get; set; }
+
 
         public EveningSession()
         {
@@ -38,13 +40,7 @@ namespace TrackManagment.Model
                 {
                     if (IsTimeForNetworkingEvent(talk.Duration))
                     {
-                        EveningEvents.Add(new Event
-                        {
-                            Name = "Networking Event",
-                            StartTime = talks.IndexOf(talk) == 0 ? StartTime : EveningEvents.Last().EndTime,
-                            EndTime = EveningEvents.Any() ? GetEndTime(EveningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
-                            Duration = talk.Duration
-                        });
+                        AddNetworkingEvent(talks, talk);
                     }
                     else
                         EveningEvents.Add(new Event
@@ -60,6 +56,20 @@ namespace TrackManagment.Model
             }
 
             return EveningEvents;
+        }
+
+        private void AddNetworkingEvent(List<Talk> talks, Talk talk)
+        {
+            EveningEvents.Add(new Event
+            {
+                Name = "Networking Event",
+                StartTime = talks.IndexOf(talk) == 0 ? StartTime : EveningEvents.Last().EndTime,
+                EndTime = EveningEvents.Any() ? GetEndTime(EveningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
+                Duration = talk.Duration
+            });
+
+
+            _isnetworkingEventAdded = true;
         }
 
         /// <summary>
@@ -81,14 +91,12 @@ namespace TrackManagment.Model
 
         private TimeSpan GetEndTime(TimeSpan startTime, int duration)
         {
-            var s = startTime.Add(new TimeSpan(0, duration, 0));
-
-            return s;
+            return startTime.Add(new TimeSpan(0, duration, 0));
         }
 
         private bool IsTimeForNetworkingEvent(int duration)
         {
-            if (!EveningEvents.Any()) return false;
+            if (!EveningEvents.Any() || _isnetworkingEventAdded) return false;
 
             if (EveningEvents.Last().EndTime.Add(new TimeSpan(0, duration, 0)) > new TimeSpan(5, 0, 0))
             {

@@ -7,8 +7,9 @@ namespace TrackManagment.Model
 {
     public class Track
     {
-        // public List<Talk> Talks { get; set; }
 
         public MorningSession MorningSession { get; set; }
+
+        public EveningSession EveningSession { get; set; }
     }
 }
