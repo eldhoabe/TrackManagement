@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrackManagment.Model
 {
-    class EveningSession
+    public class EveningSession
     {
         const int minuts = 60;
 

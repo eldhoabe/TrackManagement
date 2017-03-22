@@ -21,33 +21,37 @@ namespace TrackManagment
 
             List<Talk> talks = new StringToModel().ConvertToTalks(fileResult);
 
-            var morning = new MorningSession();
-            List<Event> morningEvents = morning.Shedule(talks);
-            var remanining = morning.UnsheduledEvents(talks);
+
+            var track = new Track("Track 1");
+            track.DisplayEvents(talks);
+
+            //var morning = new MorningSession();
+            //List<Event> morningEvents = morning.Shedule(talks);
+            //var remanining = morning.UnsheduledEvents(talks);
 
 
 
-            Console.WriteLine("***Morning Events***");
-            foreach (var evnt in morningEvents)
-            {
+            //Console.WriteLine("***Morning Events***");
+            //foreach (var evnt in morningEvents)
+            //{
 
-                Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
-                Console.WriteLine();
-            }
-
-
-
-            var evening = new EveningSession();
-            var eveningevents = evening.Shedule(remanining);
+            //    Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
+            //    Console.WriteLine();
+            //}
 
 
-            Console.WriteLine("***Evening Events***");
-            foreach (var evnt in eveningevents)
-            {
 
-                Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
-                Console.WriteLine();
-            }
+            //var evening = new EveningSession();
+            //var eveningevents = evening.Shedule(remanining);
+
+
+            //Console.WriteLine("***Evening Events***");
+            //foreach (var evnt in eveningevents)
+            //{
+
+            //    Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
+            //    Console.WriteLine();
+            //}
 
             Console.ReadLine();
         }
