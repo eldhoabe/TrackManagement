@@ -14,10 +14,8 @@ namespace TrackManagment
 
         static void Main(string[] args)
         {
-
             IFileReader reader = new FileReader(filePath);
             IEnumerable<string> fileResult = reader.ReadLines();
-
 
             List<Talk> talks = new StringToModel().ConvertToTalks(fileResult);
 
@@ -25,33 +23,6 @@ namespace TrackManagment
             var track = new Track("Track 1");
             track.DisplayEvents(talks);
 
-            //var morning = new MorningSession();
-            //List<Event> morningEvents = morning.Shedule(talks);
-            //var remanining = morning.UnsheduledEvents(talks);
-
-
-
-            //Console.WriteLine("***Morning Events***");
-            //foreach (var evnt in morningEvents)
-            //{
-
-            //    Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
-            //    Console.WriteLine();
-            //}
-
-
-
-            //var evening = new EveningSession();
-            //var eveningevents = evening.Shedule(remanining);
-
-
-            //Console.WriteLine("***Evening Events***");
-            //foreach (var evnt in eveningevents)
-            //{
-
-            //    Console.WriteLine(evnt.StartTime + " : " + evnt.Name);
-            //    Console.WriteLine();
-            //}
 
             Console.ReadLine();
         }

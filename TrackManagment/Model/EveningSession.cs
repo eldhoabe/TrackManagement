@@ -6,31 +6,20 @@ using System.Threading.Tasks;
 
 namespace TrackManagment.Model
 {
-    public class EveningSession
+    public class EveningSession : Session
     {
-        const int minuts = 60;
-
-        public TimeSpan StartTime { get; set; }
-
-        public TimeSpan EndTime { get; set; }
-
-        public List<Event> EveningEvents { get; set; }
-
-        private int _maxDurationAvailableMints { get; set; }
-
         bool _isnetworkingEventAdded { get; set; }
 
 
-        public EveningSession()
+        public EveningSession(TimeSpan startTime, TimeSpan endtime)
         {
-            StartTime = new TimeSpan(1, 0, 0);
-            EndTime = new TimeSpan(5, 0, 0);
-            EveningEvents = new List<Event>();
+            StartTime = startTime;
+            EndTime = endtime;
+            Events = new List<Event>();
+            
             //1-2 = 60 + 60 + 60 +60 
             _maxDurationAvailableMints = 300;//(EndTime.Hours - StartTime.Hours) * minuts;
         }
-
-
 
         public List<Event> Shedule(List<Talk> talks)
         {
@@ -43,11 +32,11 @@ namespace TrackManagment.Model
                         AddNetworkingEvent(talks, talk);
                     }
                     else
-                        EveningEvents.Add(new Event
+                        Events.Add(new Event
                         {
                             Name = talk.Name,
-                            StartTime = talks.IndexOf(talk) == 0 ? StartTime : EveningEvents.Last().EndTime,
-                            EndTime = EveningEvents.Any() ? GetEndTime(EveningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
+                            StartTime = talks.IndexOf(talk) == 0 ? StartTime : Events.Last().EndTime,
+                            EndTime = Events.Any() ? GetEndTime(Events.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
                             Duration = talk.Duration
                         });
 
@@ -55,16 +44,16 @@ namespace TrackManagment.Model
                 }
             }
 
-            return EveningEvents;
+            return Events;
         }
 
         private void AddNetworkingEvent(List<Talk> talks, Talk talk)
         {
-            EveningEvents.Add(new Event
+            Events.Add(new Event
             {
                 Name = "Networking Event",
-                StartTime = talks.IndexOf(talk) == 0 ? StartTime : EveningEvents.Last().EndTime,
-                EndTime = EveningEvents.Any() ? GetEndTime(EveningEvents.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
+                StartTime = talks.IndexOf(talk) == 0 ? StartTime : Events.Last().EndTime,
+                EndTime = Events.Any() ? GetEndTime(Events.Last().EndTime, talk.Duration) : GetEndTime(StartTime, talk.Duration),
                 Duration = talk.Duration
             });
 
@@ -72,33 +61,11 @@ namespace TrackManagment.Model
             _isnetworkingEventAdded = true;
         }
 
-        /// <summary>
-        /// This indicate it have time remaining
-        /// </summary>
-        /// <param name="duration"></param>
-        /// <returns></returns>
-        private bool IsTimeReamining(int duration)
-        {
-            return _maxDurationAvailableMints > duration;
-
-        }
-
-        private void UpdateRemainingTime(int duration)
-        {
-            _maxDurationAvailableMints = _maxDurationAvailableMints - duration;
-        }
-
-
-        private TimeSpan GetEndTime(TimeSpan startTime, int duration)
-        {
-            return startTime.Add(new TimeSpan(0, duration, 0));
-        }
-
         private bool IsTimeForNetworkingEvent(int duration)
         {
-            if (!EveningEvents.Any() || _isnetworkingEventAdded) return false;
+            if (!Events.Any() || _isnetworkingEventAdded) return false;
 
-            if (EveningEvents.Last().EndTime.Add(new TimeSpan(0, duration, 0)) > new TimeSpan(5, 0, 0))
+            if (Events.Last().EndTime.Add(new TimeSpan(0, duration, 0)) > new TimeSpan(5, 0, 0))
             {
                 return true;
             }

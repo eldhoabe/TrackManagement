@@ -15,23 +15,21 @@ namespace TrackManagment.Model
         public Track(string trackName)
         {
             TrackName = trackName;
+            MorningSession = new MorningSession(new TimeSpan(9, 0, 0), new TimeSpan(12, 0, 0));
+            EveningSession = new EveningSession(new TimeSpan(1, 0, 0), new TimeSpan(5, 0, 0));
         }
 
 
         public void DisplayEvents(List<Talk> talks)
         {
+            List<Event> morningEvents = MorningSession.Shedule(talks);
+            var remanining = MorningSession.UnsheduledEvents(talks);
 
-            var morning = new MorningSession();
-            List<Event> morningEvents = morning.Shedule(talks);
-            var remanining = morning.UnsheduledEvents(talks);
-
-            var evening = new EveningSession();
-            var eveningevents = evening.Shedule(remanining);
-
+            var eveningevents = EveningSession.Shedule(remanining);
 
             morningEvents.AddRange(eveningevents);
+         
             Print(morningEvents);
-
         }
 
         void Print(List<Event> events)

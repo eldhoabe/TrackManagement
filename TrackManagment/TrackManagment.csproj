@@ -53,6 +53,7 @@
     <Compile Include="Model\Parser\MinuteRule.cs" />
     <Compile Include="Model\Parser\Parser.cs" />
     <Compile Include="Model\Parser\StringToModel.cs" />
+    <Compile Include="Model\Session.cs" />
     <Compile Include="Model\Talk.cs" />
     <Compile Include="Model\Track.cs" />
     <Compile Include="Program.cs" />
